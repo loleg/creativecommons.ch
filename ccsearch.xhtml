@@ -1,0 +1,478 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html 
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!-- $Workfile: index.xhtml $ ========================================
+Search for CC Web and Image content in Switzerland and in the world.
+Version    : $Id: ccsearch.xhtml 3186 2013-09-03 08:53:45Z hartwig $
+Application: CC search web page
+Platform   : XHTML1, HTML4, NN4, IE4, IE5, IE6
+========================================================================
+Copyright  : Enter AG, Zurich, 2013
+License    : CC-BY-SA http://creativecommons.org/licenses/by/3.0/ch/deed.en_US
+==================================================================== -->
+	<head>
+		<title>Creative Commons Suche</title>
+    <!-- Content type and character set -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- Global style -->
+    <style type="text/css">
+			/* for debugging purposes an element with id "validate" is included */
+			div#validate
+			{
+			  display: none; /* set to block for showing, none for hiding */
+			}
+			body
+			{
+			  width: 1000px;
+			  font-family: Verdana, Arial, sans-serif;
+			  font-size: 9pt;
+			}
+			p
+			{  
+			  margin-top: 12px;
+			  margin-right: 12px;
+			  margin-bottom: 12px;
+			  margin-left: 12px;
+			}
+			h1
+			{
+			  font-size: 16pt;
+			  font-weight: bold;
+			}
+			h2
+			{
+			  font-size: 11pt;
+			  font-style: italic;
+			  font-weight: bold;
+			}
+			h3
+			{
+			  font-size: 8pt;
+			  font-style: normal;
+			  font-weight: bold;
+			}
+			a:link {  color: black; }
+			a:visited {  color: #808080; }
+			a:active {  color: yellow; }
+			
+			.text
+			{
+			  margin: 0 0 0
+			}
+			.title
+			{
+			  font-size: 16pt;
+			  font-weight: bold;
+			  margin: 12px 12px
+			}
+			.subtitle
+			{
+			  font-size: 11pt;
+			  font-weight: bold;
+			  font-style: italic;
+			  margin: 12px 12px;
+			}
+			.address
+			{
+			  margin-left: 12px;
+			  margin-right: 12px;
+			  margin-top: 90px;
+			  font-size: 8pt; margin-bottom: 12px;
+			  font-weight: bold;
+			  text-align: right;
+			  color: #808080;
+			}
+			.search
+			{
+			  margin-top: 12px;
+			  margin-right: 12px;
+			  margin-bottom: 12px;
+			  margin-left: 12px;
+			}
+			.nomargins
+			{
+			  margin-top: 0px;
+			  margin-right: 0px;
+			  margin-bottom: 0px;
+			  margin-left: 0px;
+			}
+    </style>    
+    <!-- Global script -->
+    <script type="text/javascript">
+    //<![CDATA[
+	    /*----------------------------------------------------------------------
+	    constants (private)
+	    ----------------------------------------------------------------------*/
+	    var g_bDebug = false;
+	
+	    /*----------------------------------------------------------------------
+	    display (public)
+	      conditional alert for debugging
+	    ----------------------------------------------------------------------*/
+	    function display(s)
+	    {
+	      if (g_bDebug)
+	        alert(s);
+	    }; /* display */
+	
+	    /*----------------------------------------------------------------------
+	    onSearchSubmit event handler
+	    ----------------------------------------------------------------------*/
+	    function onSearchSubmit()
+	    {
+	      /* analyze license */
+	      var bCcBy = false;
+	      var bCcBySa = false;
+	      var bCcByNd = false;
+	      var bCcByNc = false;
+	      var bCcByNcSa = false;
+	      var bCcByNcNd = false;
+	      var bPd = false;
+	      var fldsetLicense = document.getElementById("license");
+	      for (iChild = 0; iChild < fldsetLicense.childNodes.length; iChild++)
+	      {
+	        var nodeChild = fldsetLicense.childNodes[iChild];
+	        if ((nodeChild.nodeType == 1) /* ELEMENT_NODE */ &&
+	            (nodeChild.nodeName.toLowerCase() == "input"))
+	        {
+	          if (nodeChild.getAttribute("checked"))
+	          {
+	            sLicense = nodeChild.getAttribute("value");
+	            if (sLicense == "cc-by")
+	              bCcBy = true;
+	            else if (sLicense == "cc-by-sa")
+	              bCcBySa = true;
+	            else if (sLicense == "cc-by-nd")
+	              bCcByNd = true;
+	            else if (sLicense == "cc-by-nc")
+	              bCcByNc = true;
+	            else if (sLicense == "cc-by-nc-sa")
+	              bCcByNcSa = true;
+	            else if (sLicense == "cc-by-nc-nd")
+	              bCcByNcNd = true;
+	            else if (sLicense == "pd")
+	              bPd = true;
+	          }
+	        }
+	      }
+	      var sInclude = "";
+	      var sExclude = "";
+	      if (bPd)
+	      {
+	        if (sInclude.length > 0)
+	          sInclude = sInclude+"|";
+	        sInclude = sInclude + "cc_publicdomain";
+	      }
+	      else
+	      {
+	        if (sExclude.length > 0)
+	          sExclude = sExclude+"|";
+	        sExclude = sExclude + "cc_publicdomain";
+	      }
+	      if (bCcBy || bCcBySa || bCcByNd || bCcByNc || bCcByNcSa || bCcByNcNd)
+	      {
+	        if (sInclude.length > 0)
+	          sInclude = sInclude+"|";
+	        sInclude = sInclude + "cc_attribute";
+	      }
+	      else
+	      {
+	        if (sExclude.length > 0)
+	          sExclude = sExclude+"|";
+	        sExclude = sExclude + "cc_attribute";
+	      }
+	      if (bCcBySa || bCcByNcSa)
+	      {
+	        if (sInclude.length > 0)
+	          sInclude = sInclude+"|";
+	        sInclude = sInclude + "cc_sharealike";
+	      }
+	      else
+	      {
+	        if (sExclude.length > 0)
+	          sExclude = sExclude+"|";
+	        sExclude = sExclude + "cc_sharealike";
+	      }
+	      if (bCcByNd || bCcByNcNd)
+	      {
+	        if (sInclude.length > 0)
+	          sInclude = sInclude+"|";
+	        sInclude = sInclude + "cc_nonderived";
+	      }
+	      else
+	      {
+	        if (sExclude.length > 0)
+	          sExclude = sExclude+"|";
+	        sExclude = sExclude + "cc_nonderived";
+	      }
+	      if (bCcByNc || bCcByNcSa || bCcByNcNd)
+	      {
+	        if (sInclude.length > 0)
+	          sInclude = sInclude+"|";
+	        sInclude = sInclude + "cc_noncommercial";
+	      }
+	      else
+	      {
+	        if (sExclude.length > 0)
+	          sExclude = sExclude+"|";
+	        sExclude = sExclude + "cc_noncommercial";
+	      }
+	      var sLicenseParameter = "";
+	      if (sInclude.length > 0)
+	        sLicenseParameter = sLicenseParameter + "("+sInclude+")";
+	      if (sExclude.length > 0)
+	        sLicenseParameter = sLicenseParameter + ".-(" + sExclude + ")";
+	      if (sLicenseParameter.length > 0)
+	        sLicenseParameter = "as_rights="+encodeURIComponent(sLicenseParameter);
+	      display("License parameter: "+sLicenseParameter);
+	      /* analyze extent */
+	      var sExtent = null;
+	      var fldsetExtent = document.getElementById("extent");
+	      for (iChild = 0; iChild < fldsetExtent.childNodes.length; iChild++)
+	      {
+	        var nodeChild = fldsetExtent.childNodes[iChild];
+	        if ((nodeChild.nodeType == 1) /* ELEMENT_NODE */ &&
+	            (nodeChild.nodeName.toLowerCase() == "input"))
+	        {
+	          if (nodeChild.checked)
+	            sExtent = nodeChild.getAttribute("value");
+	        }
+	      }
+	      var sExtentParameter = "";
+	      if (sExtent != "all")
+	        sExtentParameter = "cr=country"+sExtent.toUpperCase();
+	      display("Extent parameter: "+sExtentParameter);
+	      /* analyze scope */
+	      var sScope = null;
+	      var fldsetScope = document.getElementById("scope");
+	      for (iChild = 0; iChild < fldsetScope.childNodes.length; iChild++)
+	      {
+	        var nodeChild = fldsetScope.childNodes[iChild];
+	        if ((nodeChild.nodeType == 1) /* ELEMENT_NODE */ &&
+	            (nodeChild.nodeName.toLowerCase() == "input"))
+	        {
+	          if (nodeChild.checked)
+	            sScope = nodeChild.getAttribute("value");
+	        }
+	      }
+	      var sScopeParameter = "";
+	      if (sScope == "image")
+	        sScopeParameter = "tbm=isch";
+	      display("Scope parameter: "+sScopeParameter);
+	      /* query parameter */
+	      var fldQuery = document.getElementById("query");
+	      var sQuery = fldQuery.value;
+	      var sQueryParameter = "q="+encodeURIComponent(sQuery);
+	      display("Query parameter: "+sQueryParameter);
+	      /* constant parameters */
+	      var sPersonalizationParameter = "pws=0"; // turn off personalization
+	      var sLanguageParameter = "hl=de"; // GUI (HTML?) language, not result language, which would be lr
+	      var sInputEncodingParameter = "ie=utf-8";
+	      var sOutputEncodingParameter = "oe=utf-8";
+	      var sSafeSearchParameter = "safe=off";
+	      /* request path */
+	      var sRequestPath = "/search"+
+	        "?"+sPersonalizationParameter+
+	        "&"+sLanguageParameter +
+	        "&"+sInputEncodingParameter +
+	        "&"+sOutputEncodingParameter +
+          "&"+sSafeSearchParameter;
+	      if (sExtentParameter.length > 0)
+	        sRequestPath = sRequestPath+
+	          "&"+sExtentParameter;
+	      if (sScopeParameter.length > 0)
+	        sRequestPath = sRequestPath +
+	          "&"+sScopeParameter;
+	      if (sLicenseParameter.length > 0)
+	        sRequestPath = sRequestPath +
+	          "&"+sLicenseParameter;
+	      sRequestPath = sRequestPath +
+	        "&"+sQueryParameter;
+	      display("Request Path: "+sRequestPath);
+	      var iframeResult = document.getElementById("result");
+	      var sProxyRequest = "google-proxy.php?path="+encodeURIComponent(sRequestPath);
+	      iframeResult.src = sProxyRequest;
+	      return false;
+	    }; /* onSearchSubmit */
+
+	    /*----------------------------------------------------------------------
+	    fixupAnchor
+	      fix up a single URL
+	    ----------------------------------------------------------------------*/
+	    function fixupAnchor(sHref, anchor)
+	    {
+	      if (sHref)
+	      {
+		      display("before: "+sHref);
+		      /* detach host prefix of this site */
+		      var sHost = location.protocol+"//"+location.host;
+		      if ((sHref.length >= sHost.length) && (sHref.substring(0,sHost.length) == sHost))
+		        sHref = sHref.substring(sHost.length);
+		      if ((sHref.length >= 8) && (sHref.substring(0,8) == "/search?"))
+		        sHref = "google-proxy.php?path="+encodeURIComponent(sHref);
+		      else if ((sHref.length >= 1) && (sHref.substring(0,1) == "/"))
+		      {
+		        sHref = "http://www.google.com"+sHref;
+		        if (anchor)
+		          anchor.setAttribute("target","_top");
+		      }
+		      else if ((sHref.length < 8) || 
+		               ((sHref.substring(0,7) != "http://") && 
+		                (sHref.substring(0,8) != "https://")))
+		        sHref = "http://www.google.com/search/"+sHref;
+		      display("after: "+sHref);
+	      }
+	      return sHref;
+	    }; /* fixupAnchor */
+
+	    /*----------------------------------------------------------------------
+	    fixupAnchors
+	      loop through children and
+	      - fix anchors to display in parent window
+	      - call fixupAnchors recursively
+	    ----------------------------------------------------------------------*/
+	    function fixupAnchors(node)
+	    {
+	      /* loop through children and fix links and recurse */
+	      for (var iChild = node.childNodes.length - 1; iChild >= 0; iChild--) 
+	      {
+	        var nodeChild = node.childNodes[iChild];
+	        if (nodeChild.nodeType == 1) /* ELEMENT_NODE */
+	        {
+	          if (nodeChild.nodeName.toLowerCase() == "a")
+	          {
+	            var sHref = fixupAnchor(nodeChild.getAttribute("href"),nodeChild);
+	            if (sHref)
+	              nodeChild.setAttribute("href",sHref);
+	          }
+	          else if (nodeChild.nodeName.toLowerCase() == "img")
+	          {
+	            var sSrc = fixupAnchor(nodeChild.src,null);
+	            if (sSrc)
+	              nodeChild.src = sSrc;
+	          }
+	          else if (nodeChild.nodeName.toLowerCase() == "script")
+			      {
+			        var sSrc = fixupAnchor(nodeChild.src,null);
+			        if (sSrc)
+			          nodeChild.src = sSrc;
+		        }
+		        /* recursion */
+	          fixupAnchors(nodeChild);
+	        }
+	      }
+	    }; /* fixupAnchors */
+	
+	    /*----------------------------------------------------------------------
+	    fixup is called in onload of search and fixes all links to open
+	    in parent.
+	    ----------------------------------------------------------------------*/
+	    function fixup()
+	    {
+	      /* loop through DOM of frame */
+	      var frameResult = document.getElementById("result");
+	      var docResult = null;
+	      if (frameResult.contentDocument)
+	        docResult = frameResult.contentDocument;
+	      else
+	        docResult = frameResult.contentWindow.contentDocument;
+	      var divCount = docResult.getElementById("subform_ctrl");
+	      var divResults = docResult.getElementById("center_col");
+	      var divFoot = docResult.getElementById("foot");
+	      var tableFoot = null;
+	      if (divFoot != null)
+	        tableFoot = divFoot.getElementsByTagName("table")[0];
+	      if ((divCount != null) && (divResults != null))
+	      {
+	        var body = docResult.getElementsByTagName("body")[0];
+	        if (body != null)
+	        {
+	  	      for (var iChild = body.childNodes.length - 1; iChild >= 0; iChild--)
+	  	        body.removeChild(body.childNodes[iChild]);
+			      body.appendChild(divCount);
+			      body.appendChild(divResults);
+			      if (tableFoot != null)
+			        body.appendChild(tableFoot);
+			      fixupAnchors(docResult);
+	        }
+	      }
+	    }; /* fixup */
+    //]]>
+    </script>
+	</head>
+	<body class="nomargins">
+    <div><p><img src="http://allmend.ch/wp/wp-content/themes/allmend/images/headers/allmend_drops.jpg"/></p></div>
+		<div class="title"><h1>Creative Commons Suche</h1></div>
+    <div class="text">
+      <!-- Query -->
+      <form method="get" target="result" onsubmit="return onSearchSubmit()">
+        <p>
+          Man kann unter anderem mit Hilfe von Google nach Web-Inhalten und Bildern suchen, 
+          die unter einer Creative Commons Lizenz publiziert sind.
+        </p>
+        <p>
+          Wenn man in einem Google-Suchresultat unten "erweiterte Suche" anklickt 
+          und dort unten unter "Nutzungsbestimmungen" den gewünschten CC-Lizenztyp anwählt,
+          filtert Google die Fundstellen nach Lizenz. 
+          Das Auffinden eines Inhalts mittels gefilterter Google-Suche ist allerdings keine absolute Garantie,
+          dass dieser unter der gewünschten Lizenz verfügbar ist. In jedem Fall sind die Nutzungsbestimmungen
+          der Website massgebend.
+        </p>
+        <p>
+          Wir haben diese bei Google eher schwierig zu findenden Einstellungen hier direkt verfügbar gemacht.
+          Siehe auch die CC-Suche unter <a href="http://search.creativecommons.org/?lang=de">http://search.creativecommons.org</a>. 
+        </p>
+        <p>
+          <fieldset id="license">
+            <legend>Lizenzbedingungen</legend>
+            <input type="checkbox" name="license" value="pd" checked="checked"/>Gemeinfrei (<a href="http://creativecommons.org/publicdomain/zero/1.0/deed.de">Public Domain</a>)<br/> 
+            <input type="checkbox" name="license" value="cc-by" checked="checked"/>Namensnennung (<a href="http://creativecommons.org/licenses/by/3.0/deed.de">by</a>)<br/>
+            <input type="checkbox" name="license" value="cc-by-sa" checked="checked"/>Namensnennung &ndash; Weitergabe unter gleichen Bedingungen (<a href="http://creativecommons.org/licenses/by-sa/3.0/deed.de">by-sa</a>)<br/>
+            <input type="checkbox" name="license" value="cc-by-nd"/>Namensnennung &ndash; Keine Bearbeitung (<a href="http://creativecommons.org/licenses/by-nd/3.0/deed.de">by-nd</a>)<br/>
+            <input type="checkbox" name="license" value="cc-by-nc"/>Namensnennung &ndash; Nicht-kommerziell (<a href="http://creativecommons.org/licenses/by-nc/3.0/deed.de">by-nc</a>)<br/>
+            <input type="checkbox" name="license" value="cc-by-nc-sa"/>Namensnennung &ndash; Nicht-kommerziell &ndash; Weitergabe unter gleichen Bedingungen (<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.de">by-nc-sa</a>)<br/>
+            <input type="checkbox" name="license" value="cc-by-nc-nd"/>Namensnennung &ndash; Nicht-kommerziell &ndash; Keine Bearbeitung (<a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.de">by-nc-nd</a>)
+          </fieldset>
+        </p>
+        <p>
+          <fieldset id="scope">
+            <legend>Inhaltsart</legend>
+            <input type="radio" name="scope" value="web" checked="checked"/>Web-Suche 
+            <input type="radio" name="scope" value="image"/>Bild-Suche
+          </fieldset>
+        </p>
+        <p>
+          <fieldset id="extent">
+            <legend>Suchbereich</legend>
+            <input type="radio" name="extent" value="all" checked="checked"/>weltweit 
+            <input type="radio" name="extent" value="ch"/>schweizweit
+          </fieldset>
+        </p>
+        <p>
+          <input type="text" id="query" size="128" maxlength="256" value=""/>
+          <input type="submit" value="Suche" />
+        </p>
+      </form>
+      <!-- result -->
+      <iframe id="result" style="margin-left:12px; width:976px; height:14cm" onload="fixup()"></iframe>
+      <p>
+        <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/ch/">
+          <img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/ch/88x31.png" />
+        </a><br />
+        Dieses Werk (Web Seite) - so es denn eines ist - steht unter einer 
+        <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/ch/">
+          Creative Commons Namensnennung - Weitergabe unter gleichen Bedingungen 3.0 Schweiz Lizenz
+        </a>.
+      </p>
+    </div>
+    <div id="validate">
+      <p>
+        <a href="http://validator.w3.org/check?uri=referer">
+          <img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Transitional" height="31" width="88" />
+        </a>
+      </p>
+    </div>
+	</body>
+</html>
