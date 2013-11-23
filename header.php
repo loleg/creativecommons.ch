@@ -45,22 +45,18 @@
 						<li class="dropdown">
 							<a href="#about" class="dropdown-toggle">Menu</a>
 								<ul class="menu-dropdown">
-									<li><a href="http://creativecommons.org/about">About</a></li>
-									<li><a href="http://creativecommons.org/licenses/">Licenses</a></li>
-									<li><a href="http://creativecommons.org/publicdomain/">Public Domain</a></li>
+									<?php wp_list_pages('post_type=page&depth=1&sort_column=menu_order&title_li='); ?>
 								</ul>
 						</li>
 					</ul>
 					<ul id="wide-menu" class="nav">
-					    <li><a href="http://creativecommons.org/about">About</a></li>
-						<li><a href="http://creativecommons.org/licenses/">Licenses</a></li>
-						<li><a href="http://creativecommons.org/publicdomain/">Public Domain</a></li>
-				</ul>
-				<form action="https://creativecommons.org" id="search_form">
-					<input type="hidden" name="stype" value="site" id="find_site">
-					<input type="text" name="q" placeholder="Site Search">
-					<input type="submit" id="glass" title="Search" value="Submit">
-				</form>
+						<?php wp_list_pages('post_type=page&depth=1&sort_column=menu_order&title_li='); ?>
+					</ul>
+					<form action="https://creativecommons.org" id="search_form">
+						<input type="hidden" name="stype" value="site" id="find_site">
+						<input type="text" name="q" placeholder="Site Search">
+						<input type="submit" id="glass" title="Search" value="Submit">
+					</form>
 				</div>
 			</div>
 		</div>
