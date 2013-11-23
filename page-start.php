@@ -13,7 +13,7 @@ get_header(); ?>
 		<?php /* The loop */ ?>
 			<?php while ( have_posts() ) : the_post(); ?>
 
-				<article id="post-<?php $theid = the_ID(); ?>" <?php post_class(); ?>>
+				<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 					<header class="entry-header">
 						<?php if ( has_post_thumbnail() && ! post_password_required() ) : ?>
 						<div class="entry-thumbnail">
@@ -26,11 +26,13 @@ get_header(); ?>
 
 					<div class="entry-content">
 					  <?php the_content(); ?>
+
 			          <?php
 			            // Get all children
 			            $my_wp_query = new WP_Query();
 			            $all_wp_pages = $my_wp_query->query(array('post_type' => 'page', 'posts_per_page' => -1));
-			            $curpage_children = get_page_children( $theid, $all_wp_pages );
+			            $curpage_children = get_page_children( $post->ID, $all_wp_pages );
+			            
 		      			foreach($curpage_children as $p){
 		      			  $page_data = get_page($p);
 			              $content = $page_data->post_content;

@@ -7,6 +7,8 @@
 }
 .topbar a:visited { color:white; }
 
+.entry-header { margin-bottom: 0px; }
+
 #main {
 	padding-bottom: 0;
 }
