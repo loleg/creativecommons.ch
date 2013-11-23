@@ -26,22 +26,22 @@ get_header(); ?>
 
 					<div class="entry-content">
 					  <?php the_content(); ?>
-          <?php
-            // Get all children
-            $my_wp_query = new WP_Query();
-            $all_wp_pages = $my_wp_query->query(array('post_type' => 'page', 'posts_per_page' => -1));
-            $curpage_children = get_page_children( the_ID(), $all_wp_pages );
 
-      			foreach($curpage_children as $p){
-      			  $page_data = get_page($p);
-      			  /*
-              $content = $page_data->post_content;
-              $content = apply_filters('the_content',$content);
-              $content = str_replace(']]>', ']]>', $content);
-              echo print_r($page_data);
-              */
-              echo '<p>'.$page_data->post_content.'</p>';
-            } ?>
+			          <?php
+			            // Get all children
+			            $my_wp_query = new WP_Query();
+			            $all_wp_pages = $my_wp_query->query(array('post_type' => 'page', 'posts_per_page' => -1));
+			            $curpage_children = get_page_children( the_ID(), $all_wp_pages );
+
+		      			foreach($curpage_children as $p){
+		      			  $page_data = get_page($p);
+			              $content = $page_data->post_content;
+			              $content = apply_filters('the_content',$content);
+			              $content = str_replace(']]>', ']]>', $content);
+			              //echo print_r($page_data);
+			              echo '<p id="post-'.$page_data->ID.'" title="'.$page_data->post_title.'">'.$content.'</p>';
+			            } ?>
+
 						<?php wp_link_pages( array( 'before' => '<div class="page-links"><span class="page-links-title">' . __( 'Pages:', 'twentythirteen' ) . '</span>', 'after' => '</div>', 'link_before' => '<span>', 'link_after' => '</span>' ) ); ?>
 					</div><!-- .entry-content -->
 

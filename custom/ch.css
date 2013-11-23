@@ -1,0 +1,27 @@
+.topbar form {
+	margin-top: 7px;
+}
+.topbar form #glass {
+	padding: 0;
+	top: 3px;
+}
+.topbar a:visited { color:white; }
+
+#main {
+	padding-bottom: 0;
+}
+
+footer {
+	position: relative;
+	height: auto;
+	padding-top: 0px;
+	margin-top: 0px;
+	background: none;
+}
+.site-footer .sidebar-container {
+	color: white;
+	background: #98C807 url(../img/Peters_projection_blank.png) no-repeat top left;
+	background-size: auto 100%;
+}
+.site-footer .widget a { color: black; font-weight: normal; }
+.site-footer .widget-title { font-style: normal; }
