@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: Start Page
+Template Name: Top Level
 */
 
 /* Lists all child pages

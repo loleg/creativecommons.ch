@@ -916,6 +916,13 @@ ul.nav-menu li:hover > ul,
 	font-style: italic;
 }
 
+header .current_page_item a, header .current_page_item a:hover {
+	opacity: 0.4;
+	color: black !important;
+	background-color: white;
+	border-radius: 0 0 8px 8px;
+}
+
 .menu-toggle {
 	display: none;
 }
@@ -1018,6 +1025,9 @@ ul.nav-menu li:hover > ul,
 	color: #ea9629;
 }
 
+.entry-header {
+	display: none; /* DISABLED */
+}
 
 /**
  * 5.2 Entry Meta
